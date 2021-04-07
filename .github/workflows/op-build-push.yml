@@ -9,6 +9,7 @@ on:
 
 env:
   IMAGE_NAME: sidb-operator
+  IMG:
 
 jobs:
   build-push:
