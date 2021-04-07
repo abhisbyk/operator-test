@@ -1,0 +1,59 @@
+name: k8s operator build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*.*.*'
+
+env:
+  IMAGE_NAME: sidb-operator
+
+jobs:
+  build-push:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    # Login to Github container registry
+    - name: Registry login
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push the docker image
+      # Build and pushing docker image to GitHub registry using the makefile of the project
+      run: |
+        # Calculation of the tag if the git-tag is pushed, otherwise take commit SHA as the tag
+        if [[ "${{ github.ref }}" == "refs/tags/"* ]]
+        then
+          # Strip git ref prefix from tag
+          TAG=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          TAG=$(echo $TAG | sed -e 's/^v//')
+        else
+          # Using the commit SHA as the git tag
+          TAG=$GITHUB_SHA
+        fi
+
+        echo "Calculated tag is: $TAG"
+
+        # Repository + IMAGE_NAME + TAG constitutes the IMG
+        IMG=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:$TAG
+
+        # First generate code
+        memcached-operator/make generate
+
+        # Create Manifests
+        memcached-operator/make manifests
+
+        # Build and push the operator image
+        memcached-operator/make docker-build docker-push
+
+        # Update the deploy-operator yaml file
+        memcached-operator/make deploy
