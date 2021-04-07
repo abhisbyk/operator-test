@@ -56,6 +56,3 @@ jobs:
 
         # Build and push the operator image
         make docker-build docker-push
-
-        # Update the deploy-operator yaml file
-        make deploy
