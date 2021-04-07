@@ -45,15 +45,17 @@ jobs:
 
         # Repository + IMAGE_NAME + TAG constitutes the IMG
         IMG=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:$TAG
+        
+        cd memcached-operator
 
         # First generate code
-        memcached-operator/make generate
+        make generate
 
         # Create Manifests
-        memcached-operator/make manifests
+        make manifests
 
         # Build and push the operator image
-        memcached-operator/make docker-build docker-push
+        make docker-build docker-push
 
         # Update the deploy-operator yaml file
-        memcached-operator/make deploy
+        make deploy
