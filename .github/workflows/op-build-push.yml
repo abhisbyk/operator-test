@@ -48,11 +48,5 @@ jobs:
         
         cd memcached-operator
 
-        # First generate code
-        make generate
-
-        # Create Manifests
-        make manifests
-
         # Build and push the operator image
         make docker-build docker-push
