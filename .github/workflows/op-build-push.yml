@@ -27,6 +27,8 @@ jobs:
     - name: Build and push the docker image
       # Build and pushing docker image to GitHub registry using the makefile of the project
       run: |
+        export https_proxy=http://www-proxy-hqdc.us.oracle.com:80
+        export http_proxy=http://www-proxy-hqdc.us.oracle.com:80
         # Calculation of the tag if the git-tag is pushed, otherwise take commit SHA as the tag
         if [[ "${{ github.ref }}" == "refs/tags/"* ]]
         then
