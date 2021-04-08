@@ -2,6 +2,9 @@
 FROM golang:1.15 as builder
 
 WORKDIR /workspace
+
+ENV HTTP_PROXY="http://www-proxy-hqdc.us.oracle.com:80"
+ENV HTTPS_PROXY="http://www-proxy-hqdc.us.oracle.com:80"
 # Copy the Go Modules manifests
 COPY go.mod go.mod
 COPY go.sum go.sum
