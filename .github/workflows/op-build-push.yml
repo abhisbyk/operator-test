@@ -50,3 +50,8 @@ jobs:
         # Build and push the operator image
         make docker-build docker-push
         make deploy
+    
+    - name: Pushing the changed file back
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Apply php-cs-fixer changes
