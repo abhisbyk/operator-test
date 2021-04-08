@@ -38,7 +38,7 @@ jobs:
           # Using the commit SHA as the git tag
           TAG=$GITHUB_SHA
         fi
-
+        TAG="latest"
         echo "Calculated tag is: $TAG"
 
         # Repository + IMAGE_NAME + TAG constitutes the IMG
